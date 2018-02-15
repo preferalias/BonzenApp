@@ -2,13 +2,17 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, Image, TextInput, TouchableOpacity, StatusBar } from 'react-native';
 
 export default class LoginForm extends React.Component {
+    updateParentState(data){
+        this.props.updateInputState(data)
+    }
   render() {
     return (
         <View style={styles.container}>
             <StatusBar
                 barStyle="light-content"
             />
-            <TextInput 
+            <TextInput
+                onChangeText={(input) => this.updateParentState({user:input})}
                 style={styles.input}
                 placeholder="username or email"
                 placeholderTextColor="rgba(255,255,255,0.7)"
@@ -19,6 +23,7 @@ export default class LoginForm extends React.Component {
                 underlineColorAndroid="transparent"
             />
             <TextInput 
+                onChangeText={(input) => this.updateParentState({pass:input})}
                 style={styles.input} 
                 placeholder="password"
                 secureTextEntry

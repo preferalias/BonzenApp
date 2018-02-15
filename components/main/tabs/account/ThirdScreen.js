@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight, AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight, AsyncStorage, TouchableOpacity} from 'react-native';
 import { List, ListItem, Avatar } from 'react-native-elements'
 import { Icon } from 'react-native-elements'
 
@@ -31,6 +31,27 @@ export default class ThirdScreen extends React.Component {
         headerTitle : 'Settings',
         tabBarIcon : ({tintColor}) => (<Icon iconStyle={styles.iconContainer} containerStyle={styles.iconContainer} name="account-circle" size={25} color={tintColor} />),
     }
+    constructor(){
+      super();
+      this.state = {
+        username: '',
+        role: '',
+      }
+    }
+    async syncName(){
+      let user = await AsyncStorage.getItem('user'); 
+      let roletype = await AsyncStorage.getItem('role');
+      if (user !== null){
+        this.setState({username: user})
+        this.setState({role: roletype})
+      }
+    }
+    componentDidMount(){
+      this.syncName();
+    }
+    
+    
+
     logOut = () => {
       AsyncStorage.removeItem('user');
       this.props.navigation.navigate('Login');
@@ -42,8 +63,8 @@ export default class ThirdScreen extends React.Component {
         {
           <ListItem
             roundAvatar
-            title='C. Cat Meow'
-            subtitle='Bonzen Co.,Ltd'
+            title={this.state.username}
+            subtitle={this.state.role}
             avatar={
               <Avatar
                 medium
@@ -65,7 +86,7 @@ export default class ThirdScreen extends React.Component {
           ))
         }
       </List>
-        <TouchableHighlight style={styles.loginButton} onPress={this.logOut}><Text style={styles.logoutText}>Log Out</Text></TouchableHighlight>
+        <TouchableOpacity style={styles.loginButton} onPress={this.logOut}><Text style={styles.logoutText}>Log Out</Text></TouchableOpacity>
       </View>
     );
   }

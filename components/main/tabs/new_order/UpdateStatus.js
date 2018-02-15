@@ -6,6 +6,7 @@ export default class UpdateStatus extends React.Component{
     static navigationOptions = {
         headerTitle: 'Status',
         title: 'New',
+        headerLeft: null,
         tabBarIcon : ({tintColor}) => (<Icon name="playlist-add" size={30} color={tintColor} />),
     }
 

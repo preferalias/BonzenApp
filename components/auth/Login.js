@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TouchableOpacity, AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TouchableOpacity, AsyncStorage,ActivityIndicator} from 'react-native';
 
 import LoginForm from './LoginForm'
+
+const GLOBAL = require("../../Globals");
 
 export default class Login extends React.Component {
   static navigationOptions = {
@@ -9,33 +11,84 @@ export default class Login extends React.Component {
     header: null
   }
 
+  constructor(){
+    super();
+    this.state = {
+      user: '',
+      pass: '',
+      loggedIn: [],
+      fetching: false,
+    }
+  }
   saveAsync = async () => {
-    let user = 'John Doe';
-    await AsyncStorage.setItem('user',user);
-    if (await AsyncStorage.getItem('user') !== null ) {
-      this.props.navigation.navigate('Main');
+    if (this.state.loggedIn === false) {
+      alert('Invalid username or password')
+      this.setState({fetching: false,})
+    } else {
+      let user = this.state.loggedIn.fullName;
+      let role = this.state.loggedIn.roleType;
+      await AsyncStorage.setItem('user',user);
+      await AsyncStorage.setItem('role', role )
+      let getUser = await AsyncStorage.getItem('user')
+      let getRole = await AsyncStorage.getItem('role')
+      if ((getUser !== null ) && (getRole !== null)) {
+        if (role == 'staff'){
+          this.props.navigation.navigate('Staff');
+        } else {
+          this.props.navigation.navigate('Contact');
+        }
+        
+      }
     }
   }
 
   async componentWillMount() {
     let user = await AsyncStorage.getItem('user');
-    if (user !== null) {
-      this.props.navigation.navigate('Main');
+    let role = await AsyncStorage.getItem('role');
+    if ((user !== null) && (role !== null)){
+      if (role == 'staff') {
+        this.props.navigation.navigate('Staff')
+      } else {
+        this.props.navigation.navigate('Contact');
+      }
     }
   }
- /* 
-  displayData = async () => {
-    try {
-      let user = await AsyncStorage.getItem('user');
-      alert(user);
-    } catch(error) {
-      alert(error);
+
+  fetchLogin(){
+    if (this.validate()){
+      this.setState({fetching:true,})
+      var form = new FormData();
+      form.append('method', 'Login');
+      form.append('user', this.state.user);
+      form.append('pass', this.state.pass);
+      fetch(GLOBAL.SITE_URL, {
+        method: 'POST' ,
+        headers: {
+          'token' : 'JH59',
+        },
+        body : form
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            loggedIn: response,
+          }, () => this.saveAsync())
+        }).catch((err) => {this.setState({fetching:false}); alert(err)});
+    } else {
+      alert("Please input user and password");
     }
   }
-  removeData() {
-    AsyncStorage.removeItem('user');
+
+  validate(){
+    var valid = false;
+    this.state.user && this.state.pass ? valid = true : valid = false;
+    return valid
   }
-  */
+
+  updateState(data){
+      this.setState(data)
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -47,12 +100,22 @@ export default class Login extends React.Component {
             <Text style={styles.title}>Genedia properties solutions by react-native</Text>
         </View>
         <View style={styles.formContainer}>
-          <LoginForm />
-          <TouchableOpacity 
-                style={styles.buttonContainer}
-                onPress={this.saveAsync}>
-                    <Text style={styles.buttonText}>LOGIN</Text>
+          <LoginForm updateInputState={this.updateState.bind(this)} />
+          {
+            this.state.fetching ?
+            <TouchableOpacity 
+              style={styles.buttonContainer}
+              >
+             <ActivityIndicator style={{backgroundColor:'rgba(0,0,0,0.0)',}} size="small" color="black" />
             </TouchableOpacity>
+            :
+            <TouchableOpacity 
+                style={styles.buttonContainer}
+                onPress={() => this.fetchLogin()}>
+                <Text style={styles.buttonText}>LOGIN</Text>
+            </TouchableOpacity>
+          }
+          
         </View>
       </KeyboardAvoidingView>
     );

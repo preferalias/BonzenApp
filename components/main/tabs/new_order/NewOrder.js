@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, Picker, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Alert} from 'react-native';
+import { ActivityIndicator, ImagePickerIOS, StyleSheet, Text, Picker, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Alert, TouchableHighlight, Image, ActionSheetIOS} from 'react-native';
 
 import { Icon } from 'react-native-elements';
 import MultiSelect from 'react-native-multiple-select';
-
 const GLOBAL = require('../../../../Globals')
 
 
@@ -11,11 +10,13 @@ export default class NewOrder extends React.Component {
     static navigationOptions = {
         tabBarLabel : 'New Order',
         headerTitle: 'New',
+        headerLeft: null,
         title: 'New',
     }
     constructor(){
       super();
       this.state = {
+        imgStatePath: '',
         data: [], 
         selectedValue: [],
         item:[],
@@ -33,10 +34,14 @@ export default class NewOrder extends React.Component {
         report_date: new Date(),
         remark: '',
         result: false,
+        fetching: false,
+        signPath: '',
       };
     }
     componentDidMount(){
-      this.fetchUsers();
+      const {state} = this.props.navigation;
+      var imgPath = state.params ? state.params.imgPath : '';
+      this.setState({imgStatePath: imgPath});
     }
 
     onSelectedItemsChange = (selectedItems) => {
@@ -46,20 +51,17 @@ export default class NewOrder extends React.Component {
       console.log('Selected Items: ', selectedItems)
     }
 
-    fetchUsers(){
-      fetch('https://jsonplaceholder.typicode.com/users')
-        .then((response) => response.json())
-        .then((response) => {
-          this.setState({
-            data: response
-          })
-        });
-    }
-
     submitDetail = async (body) => {
       var form = new FormData();
       form.append('method', 'CreateOrder');
       form.append('order', body);
+      if (this.state.imgStatePath !== ''){
+        form.append('imageValue',{
+          uri: this.state.imgStatePath,
+          type: 'image/jpeg',
+          name: 'myphoto'
+        })
+      }
 
       await fetch(GLOBAL.SITE_URL, {
         method: 'POST' ,
@@ -67,11 +69,15 @@ export default class NewOrder extends React.Component {
           'token' : 'JH59',
         },
         body : form
-      }).then((response) => response.json()).then(response => {this.setState({result: response})});
-      console.log(this.state.result);
+      }).then((response) => response.json()).then(response => {this.setState({result: response,fetching: false})})
+      .catch((err) => {alert(err); this.setState({fetching: false,})});
+      
     }
 
     onSubmit = async () => {
+      this.setState({
+        fetching: true,
+      })
       var body = JSON.stringify({
         reporter_customer_id : this.state.reporter_customer_id,
         contact_name: this.state.contact_name,
@@ -102,7 +108,16 @@ export default class NewOrder extends React.Component {
       this.props.navigation.navigate('UpdateStatus',{status: this.state.result});
     }
 
+    goCam = () => {
+      this.props.navigation.navigate('CameraView');
+    }
+
+    navigateSignature = () => {
+      this.props.navigation.navigate('Signature');
+    }
+
   render() {
+    
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.keyAvoid}>
         <ScrollView contentContainerStyle={styles.container}>
@@ -190,14 +205,85 @@ export default class NewOrder extends React.Component {
                 underlineColorAndroid="transparent"
                 ref={(input) => {this.contactPersonInput = input}}
               />
-          </View> 
-        <TouchableOpacity onPress={this.alertConfirm} style={styles.buttonContainer}>
+          </View>
+        <View style={styles.pictureContainer}>
+            {this.onShowImage()}
+        </View>
+        <TouchableOpacity onPress={this.navigateSignature} style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Signature</Text> 
+          </TouchableOpacity> 
+        {this.state.fetching == false ? 
+          <TouchableOpacity onPress={this.alertConfirm} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Submit Order</Text> 
           </TouchableOpacity>
+          :
+          <View style={styles.indiCon}>
+            <ActivityIndicator style={{backgroundColor:'rgba(0,0,0,0.0)', marginTop: 0}} size="small" color="black" />
+          </View> }
         </ScrollView>
         </KeyboardAvoidingView>
     );
   }
+
+  onShowImage() {
+    if(this.state.imgStatePath === '' ) {
+      return ( <TouchableOpacity onPress={this.getPicture} style={{flex:1, height: 150, justifyContent: 'center', alignItems: 'center'}}>
+        <Icon name="add-a-photo" size={50} color="gray" />
+        <Text style={{color: 'gray'}}>Attach image</Text> 
+      </TouchableOpacity>) 
+    } else {
+      return ( 
+        <TouchableOpacity onPress={this.onOpenSheet} style={styles.imgCon}>
+          <Image source={{
+                uri: this.state.imgStatePath,
+              }}
+              style={styles.imgCon}
+            />
+        </TouchableOpacity>
+      )
+    }
+  }
+  
+  getPicture = () => {
+    let options = [ 'Take a picture', 'Camera Roll' , 'Cancel' ];
+    let destructiveButtonIndex = 2;
+    let cancelButtonIndex = 2;
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) { this.goCam() }
+        if (buttonIndex === 1) { this.chooseImageFromGallery() }
+      }
+    ) 
+  }
+
+  chooseImageFromGallery() {
+    ImagePickerIOS.openSelectDialog({}, imageUrl => {
+      this.setState({imgStatePath: imageUrl});
+    }, error => {this.setState({imgStatePath: ''})});
+  }
+
+  onOpenSheet = () => {
+    let options = [ 'Change' , 'Cancel' ];
+    let destructiveButtonIndex = 1;
+    let cancelButtonIndex = 2;
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) { this.setState({imgStatePath: ''}) }
+      }
+    )
+  }
+
+
   alertConfirm = () => {
     Alert.alert(
       'Submit Order',
@@ -235,7 +321,7 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: '#f4f4f4',
     borderWidth: .5,
-    borderColor: '#000',
+    borderColor: '#bdbdbd',
     borderRadius: 5,
     margin: 10,
     color: 'black',
@@ -260,7 +346,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     backgroundColor: '#f4f4f4',
     borderWidth: .5,
-    borderColor: '#000',
+    borderColor: '#bdbdbd',
     height: 40,
     borderRadius: 5,
     margin: 10,
@@ -274,4 +360,28 @@ const styles = StyleSheet.create({
     alignItems: 'center'
 
   },
+  pictureContainer : {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    margin: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#bdbdbd',
+    backgroundColor: '#f4f4f4',
+    justifyContent: 'center',
+  },
+  imgCon : {
+    flex:1,
+    height: 300,
+  },
+  indiCon : {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(20,20,20,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });

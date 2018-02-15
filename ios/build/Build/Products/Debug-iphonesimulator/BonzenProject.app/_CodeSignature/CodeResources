@@ -6,7 +6,7 @@
 	<dict>
 		<key>Base.lproj/LaunchScreen.nib</key>
 		<data>
-		lzjNrwDEGraxUPkHrCPsxeN+ug8=
+		aybn4K/pSuAPNBUG+R2CI7SL7u8=
 		</data>
 		<key>Entypo.ttf</key>
 		<data>
@@ -71,7 +71,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		28kNLg0ldI6tUyTIQBDm7oReFfM=
+		dNfR0BNhhbFhUXJdQisW8SH5fsU=
 		</data>
 		<key>Ionicons.ttf</key>
 		<data>
@@ -99,19 +99,19 @@
 		</data>
 		<key>PlugIns/BonzenProjectTests.xctest.dSYM/Contents/Resources/DWARF/BonzenProjectTests</key>
 		<data>
-		dc0RFUACTpckj2guKFaFqHovD7c=
+		b347xhjP/WlYvCqnE4ekt422JN4=
 		</data>
 		<key>PlugIns/BonzenProjectTests.xctest/BonzenProjectTests</key>
 		<data>
-		G7so/n1KF+BJ51Yak1g5rndj0Yk=
+		0pNuXDwe5DqlQ9gvxFq3rEdcz8A=
 		</data>
 		<key>PlugIns/BonzenProjectTests.xctest/Info.plist</key>
 		<data>
-		fErJ/MdVd8GJvbyVZZjxLN358/Q=
+		SInH1Te6llwIEmuOPR3fT37CQoc=
 		</data>
 		<key>PlugIns/BonzenProjectTests.xctest/_CodeSignature/CodeResources</key>
 		<data>
-		fOduqPEctga8A7oqf3kemt1hn54=
+		0IHwfGoNNEYSWtTDy0ELseA22Hg=
 		</data>
 		<key>SimpleLineIcons.ttf</key>
 		<data>
@@ -128,11 +128,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			lzjNrwDEGraxUPkHrCPsxeN+ug8=
+			aybn4K/pSuAPNBUG+R2CI7SL7u8=
 			</data>
 			<key>hash2</key>
 			<data>
-			2qmz0vz6HdCUBHAY5nmQ78jE1hhjUUnclARWwZOxapA=
+			O+i0kZRTuSDWjwk0FN9do2tS8Im1bxhb6/LWT8U/0r8=
 			</data>
 		</dict>
 		<key>Entypo.ttf</key>
@@ -350,44 +350,44 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			dc0RFUACTpckj2guKFaFqHovD7c=
+			b347xhjP/WlYvCqnE4ekt422JN4=
 			</data>
 			<key>hash2</key>
 			<data>
-			ezTqYA0hjQ0C89jkCn5IqRZHKvuaUUqrtdN9ucewg54=
+			qqy3VQydbBoOclePWWLfChy2dLDZn6T8PuTDveBbVAw=
 			</data>
 		</dict>
 		<key>PlugIns/BonzenProjectTests.xctest/BonzenProjectTests</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			G7so/n1KF+BJ51Yak1g5rndj0Yk=
+			0pNuXDwe5DqlQ9gvxFq3rEdcz8A=
 			</data>
 			<key>hash2</key>
 			<data>
-			Jjp+yUolrxKOlPkyOSgXtvkAmrtmYcLU6qe3/stTkRs=
+			I/0CvHMP9ZEXgZuM1ER5eBca8MessY1RSzXA0r00iE0=
 			</data>
 		</dict>
 		<key>PlugIns/BonzenProjectTests.xctest/Info.plist</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			fErJ/MdVd8GJvbyVZZjxLN358/Q=
+			SInH1Te6llwIEmuOPR3fT37CQoc=
 			</data>
 			<key>hash2</key>
 			<data>
-			10GxAvNhkkolSFNnU13WkoFqK/Aqy7G2WWGm+Qt9M4c=
+			VzL0CD3wSMniqC3Kqm9vMx/TAc2MxfV0G2CEqNdugCA=
 			</data>
 		</dict>
 		<key>PlugIns/BonzenProjectTests.xctest/_CodeSignature/CodeResources</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			fOduqPEctga8A7oqf3kemt1hn54=
+			0IHwfGoNNEYSWtTDy0ELseA22Hg=
 			</data>
 			<key>hash2</key>
 			<data>
-			r3L0AYCuon+sO0WfX1zrtJkpgGgaR04svv3OZOfaxKI=
+			vkpVH8NOjDfy7f/DDj06VNeyR7cz8s0I4JuXo4CpIWk=
 			</data>
 		</dict>
 		<key>SimpleLineIcons.ttf</key>
